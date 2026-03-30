@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>웨딩 파티 초대장</title>
+
+  <meta property="og:title" content="결혼식에 초대합니다">
+  <meta property="og:description" content="우리 결혼해요">
+
+  <!-- 최근 메이플스토리 오리지널 폰트 -->
+  <style>
+    @font-face {
+      font-family: 'MaplestoryOTFLight';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFLight.woff') format('woff');
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'MaplestoryOTFBold';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFBold.woff') format('woff');
+      font-weight: 700;
+      font-style: normal;
+    }
+  </style>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="maple-theme-modern">
+  <canvas id="leafCanvas"
+    style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index: 100; opacity: 0.8;"></canvas>
+
+  <div id="bgmControl" class="bgm-control maple-btn">
+    🔈 BGM ON
+  </div>
+
+  <main class="container">
+    <!-- Main Title Graphics / Hero Image (Overall Party Info) -->
+    <section class="main-party-banner">
+      <div class="banner-title text-gold">Happy Wedding Day</div>
+      <div class="banner-subtitle" id="heroDate">2026. 07. 04</div>
+      <div class="banner-venue" id="heroVenue">더 청담 웨딩홀</div>
+    </section>
+
+    <!-- Character Info (Groom) -->
+    <section class="maple-window-modern character-window">
+      <div class="window-header">
+        <span class="header-title">캐릭터 정보</span>
+        <button class="header-close">✖</button>
+      </div>
+      <div class="window-body character-layout">
+        <div class="character-avatar">
+          <img src="images/기분탓.png" alt="groom">
+          <div class="level-box text-cyan">Lv.280</div>
+        </div>
+        <div class="character-stats">
+          <div class="stat-name text-gold" id="groomNameCard">기분탓이에요</div>
+          <div class="stat-line"><span class="label">직업</span> <span class="val">신랑 (Groom)</span></div>
+          <div class="stat-line"><span class="label">길드</span> <span class="val text-green">봄길</span></div>
+          <div class="stat-line"><span class="label">매력</span> <span class="val">999</span></div>
+          <div class="stat-line"><span class="label">결혼여부</span> <span class="val text-pink">기혼 (예정)</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Character Info (Bride) -->
+    <section class="maple-window-modern character-window">
+      <div class="window-header">
+        <span class="header-title">캐릭터 정보</span>
+        <button class="header-close">✖</button>
+      </div>
+      <div class="window-body character-layout">
+        <div class="character-avatar">
+          <img src="images/껀밍.png" alt="bride">
+          <div class="level-box text-cyan">Lv.287</div>
+        </div>
+        <div class="character-stats">
+          <div class="stat-name text-gold" id="brideNameCard">껀밍</div>
+          <div class="stat-line"><span class="label">직업</span> <span class="val">신부 (Bride)</span></div>
+          <div class="stat-line"><span class="label">길드</span> <span class="val text-green">봄길</span></div>
+          <div class="stat-line"><span class="label">인기도</span> <span class="val">999</span></div>
+          <div class="stat-line"><span class="label">결혼여부</span> <span class="val text-pink">기혼 (예정)</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Greeting / Story Dialog (Modern NPC Window) -->
+    <section class="maple-window-modern npc-dialog-modern">
+      <div class="npc-profile-area">
+        <div class="npc-avatar">
+          <img src="images/npc-placeholder.png"
+            onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'40\' fill=\'%23567\'/%3E%3Ccircle cx=\'50\' cy=\'35\' r=\'15\' fill=\'%239ab\'/%3E%3Cpath d=\'M30,80 Q50,50 70,80\' fill=\'%239ab\'/%3E%3C/svg%3E'"
+            alt="NPC">
+        </div>
+        <div class="npc-name-tag">운영자</div>
+      </div>
+      <div class="npc-text-area">
+        <div class="npc-title text-gold" id="greetingTitle">[퀘스트] 두 사람의 새로운 시작</div>
+        <div class="npc-desc" id="greetingContent">Loading...</div>
+        <div class="npc-next animate-bounce">▼ Next</div>
+      </div>
+    </section>
+
+    <!-- World Map -->
+    <section class="maple-window-modern map-window">
+      <div class="window-header">
+        <span class="header-title">월드맵</span>
+        <button class="header-close">✖</button>
+      </div>
+      <div class="window-body">
+        <div class="map-visual-modern">
+          <div class="map-icon">🗺️</div>
+          <div class="map-details">
+            <div class="venue-name text-gold" id="locationVenue">더 청담 웨딩홀</div>
+            <div class="hall-name" id="locationHall">그랜드홀 5층</div>
+            <div class="address-text text-gray" id="locationAddress">주소 불러오는 중...</div>
+          </div>
+        </div>
+        <div class="map-btn-group">
+          <button id="copyAddressBtn" class="maple-btn">주소 복사</button>
+          <a id="kakaoMapBtn" href="#" target="_blank" class="maple-btn">카카오맵</a>
+          <a id="naverMapBtn" href="#" target="_blank" class="maple-btn">네이버맵</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trade / Account -->
+    <section class="maple-window-modern account-window">
+      <div class="window-header">
+        <span class="header-title">교환창 (메소 보내기)</span>
+        <button class="header-close">✖</button>
+      </div>
+      <div class="window-body">
+        <div class="trade-info-text">신랑/신부에게 축하의 메소를 보냅니다.</div>
+
+        <div class="trade-section">
+          <div class="trade-side">
+            <div class="side-title text-cyan">[신랑측]</div>
+            <div id="groomAccountList" class="account-list"></div>
+          </div>
+          <div class="trade-side">
+            <div class="side-title text-pink">[신부측]</div>
+            <div id="brideAccountList" class="account-list"></div>
+          </div>
+        </div>
+        <div class="trade-warning text-gray">
+          ※ 복사 버튼을 누르면 클립보드로 교환 정보가 복사됩니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- Guestbook (자유게시판) -->
+    <section class="maple-window-modern guestbook-window">
+      <div class="window-header">
+        자유게시판 (방명록)
+        <span class="window-close-btn">×</span>
+      </div>
+
+      <div class="guestbook-form" style="padding: 15px;">
+        <p class="guestbook-desc">파티 결성을 축하하는 따뜻한 멘트를 남겨주세요!</p>
+        <div class="input-group">
+          <input type="text" id="gbName" class="maple-input" placeholder="닉네임 (이름)">
+          <input type="password" id="gbPassword" class="maple-input" placeholder="비밀번호(선택)">
+        </div>
+        <textarea id="gbMessage" class="maple-input maple-textarea" placeholder="축하의 메시지를 남겨보세요."></textarea>
+        <div style="text-align: right;">
+          <button id="gbSubmitBtn" class="maple-btn">글쓰기 등록</button>
+        </div>
+      </div>
+
+      <div class="guestbook-list-container" style="padding: 0 15px 15px 15px;">
+        <div id="gbList">
+          <div class="gb-loading">방명록 데이터를 불러오는 중...</div>
+        </div>
+      </div>
+    </section>
+
+    <div style="height: 100px;"></div> <!-- Bottom space for UI bar -->
+  </main>
+
+  <!-- Modern Maple Bottom UI (Clean, Mobile Friendly) -->
+  <div class="maple-bottom-wrapper">
+    <div class="maple-bottom-stats">
+      <div class="level-circle">Lv.99</div>
+      <div class="bars-container">
+        <div class="bar-wrap">
+          <span class="bar-lbl">HP</span>
+          <div class="bar-bg">
+            <div class="bar-fill hp-gradient" style="width: 100%;"></div>
+          </div>
+          <span class="bar-val">9999/9999</span>
+        </div>
+        <div class="bar-wrap">
+          <span class="bar-lbl">MP</span>
+          <div class="bar-bg">
+            <div class="bar-fill mp-gradient" style="width: 100%;"></div>
+          </div>
+          <span class="bar-val">9999/9999</span>
+        </div>
+      </div>
+    </div>
+    <div class="maple-exp-track">
+      <div class="exp-fill" style="width: 99.99%;"></div>
+      <div class="exp-text">EXP 99.99%</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

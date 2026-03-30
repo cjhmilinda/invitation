@@ -1,0 +1,653 @@
+@charset "utf-8";
+
+/* ═══════════════════════════════════════════
+   VARIABLES & MODERN MAPLE RESET
+   ═══════════════════════════════════════════ */
+:root {
+  --mw-bg: rgba(34, 37, 44, 0.95);
+  --mw-border: #333744;
+  --mw-header-bg: rgba(34, 37, 44, 0.98);
+
+  --text-main: #e6f0fa;
+  --text-gold: #ffde5a;
+  --text-cyan: #50c8ff;
+  --text-pink: #ff7ea5;
+  --text-green: #50d296;
+  --text-gray: #aab4be;
+
+  --btn-bg: #2c313a;
+  --btn-border: #4a5160;
+  --btn-hover: #3e4452;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body.maple-theme-modern {
+  font-family: 'MaplestoryOTFLight', sans-serif;
+  /* 헤네시스 광장 배경화면 적용 (다운로드 완료된 로컬 파일) */
+  background: url('images/henesys_bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  background-color: #1e293b;
+  /* 이미지 로드 실패 시 대체 대비색 */
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Base Bold Font Helper */
+strong,
+.text-bold {
+  font-family: 'MaplestoryOTFBold', sans-serif;
+}
+
+.text-gold {
+  color: var(--text-gold);
+  font-family: 'MaplestoryOTFBold', sans-serif;
+}
+
+.text-cyan {
+  color: var(--text-cyan);
+  font-family: 'MaplestoryOTFBold', sans-serif;
+}
+
+.text-pink {
+  color: var(--text-pink);
+  font-family: 'MaplestoryOTFBold', sans-serif;
+}
+
+.text-green {
+  color: var(--text-green);
+  font-family: 'MaplestoryOTFBold', sans-serif;
+}
+
+.text-gray {
+  color: var(--text-gray);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ═══════════════════════════════════════════
+   MODERN MAPLE WINDOW
+   ═══════════════════════════════════════════ */
+
+.maple-window-modern {
+  background: var(--mw-bg);
+  border: 1px solid var(--mw-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  overflow: hidden;
+}
+
+.window-header {
+  background: var(--mw-header-bg);
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-title {
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.header-close {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.window-body {
+  padding: 16px;
+}
+
+/* ═══════════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════════ */
+
+.maple-btn {
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: 4px;
+  color: #fff;
+  padding: 6px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.maple-btn:active,
+.maple-btn:hover {
+  background: var(--btn-hover);
+  transform: translateY(1px);
+}
+
+/* ═══════════════════════════════════════════
+   MAIN BANNER
+   ═══════════════════════════════════════════ */
+
+.main-party-banner {
+  text-align: center;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.banner-title {
+  font-size: 28px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.banner-subtitle,
+.banner-venue {
+  font-size: 16px;
+  color: #e2e8f0;
+}
+
+/* ═══════════════════════════════════════════
+   CHARACTER INFO
+   ═══════════════════════════════════════════ */
+
+.character-layout {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.character-avatar {
+  width: 110px;
+  height: 135px;
+  background: #11161d;
+  border-radius: 6px;
+  border: 1px solid #2e3340;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.character-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform-origin: center;
+  transform: scale(2.2) translateY(-10%);
+  /* 사진 속 캐릭터가 너무 작게 그려져 있어 발생하는 상단 여백을 없애기 위해 2.2배로 대폭 확대 후 위로 끌어올림 */
+}
+
+.level-box {
+  position: absolute;
+  bottom: 8px;
+  /* 끌어올린 캐릭터의 발 바로 밑인 원래 하단 위치로 원복시켜 겹침(가림) 현상 해결 */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  padding: 2px 8px;
+  font-size: 11px;
+  border-radius: 10px;
+  border: 1px solid var(--text-cyan);
+  white-space: nowrap;
+}
+
+.character-stats {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.stat-name {
+  font-size: 18px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+}
+
+.stat-line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stat-line .label {
+  color: var(--text-gray);
+}
+
+/* ═══════════════════════════════════════════
+   NPC DIALOG
+   ═══════════════════════════════════════════ */
+
+.npc-dialog-modern {
+  display: flex;
+  min-height: 110px;
+  border-left: 4px solid var(--text-cyan);
+}
+
+.npc-profile-area {
+  padding: 15px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+}
+
+.npc-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.npc-avatar img {
+  width: 100%;
+  height: 100%;
+}
+
+.npc-name-tag {
+  font-size: 12px;
+  color: var(--text-gold);
+}
+
+.npc-text-area {
+  padding: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.npc-title {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.npc-desc {
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  flex: 1;
+}
+
+.npc-next {
+  position: absolute;
+  bottom: 10px;
+  right: 15px;
+  font-size: 12px;
+  color: var(--text-cyan);
+  cursor: pointer;
+}
+
+.animate-bounce {
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(3px);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   WORLD MAP
+   ═══════════════════════════════════════════ */
+
+.map-visual-modern {
+  display: flex;
+  gap: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  align-items: center;
+}
+
+.map-icon {
+  font-size: 30px;
+}
+
+.map-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.venue-name {
+  font-size: 16px;
+}
+
+.hall-name,
+.address-text {
+  font-size: 13px;
+}
+
+.map-btn-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.map-btn-group .maple-btn {
+  flex: 1;
+}
+
+/* ═══════════════════════════════════════════
+   TRADE / ACCOUNTS
+   ═══════════════════════════════════════════ */
+
+.trade-info-text {
+  text-align: center;
+  font-size: 13px;
+  margin-bottom: 15px;
+  color: var(--text-gray);
+}
+
+.trade-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.trade-side {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.side-title {
+  font-size: 14px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 5px;
+}
+
+.account-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.account-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.account-item span {
+  flex: 1;
+}
+
+.trade-warning {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* ═══════════════════════════════════════════
+   MODERN BOTTOM UI (HP/MP/EXP)
+   ═══════════════════════════════════════════ */
+
+.maple-bottom-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid #334155;
+  display: flex;
+  flex-direction: column;
+}
+
+.maple-bottom-stats {
+  display: flex;
+  align-items: center;
+  padding: 6px 15px;
+  gap: 15px;
+}
+
+.level-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #475569, #1e293b);
+  border: 2px solid #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: #38bdf8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.bars-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bar-lbl {
+  font-size: 10px;
+  font-weight: bold;
+  width: 22px;
+  color: #fff;
+}
+
+.bar-bg {
+  flex: 1;
+  height: 8px;
+  background: #000;
+  border-radius: 4px;
+  border: 1px solid #333;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+}
+
+.hp-gradient {
+  background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+}
+
+.mp-gradient {
+  background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+}
+
+.bar-val {
+  font-size: 10px;
+  width: 55px;
+  text-align: right;
+  color: #94a3b8;
+}
+
+.maple-exp-track {
+  height: 12px;
+  background: #000;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.exp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #eab308 0%, #fde047 100%);
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.exp-text {
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  font-size: 9px;
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(15, 23, 42, 0.9);
+  color: #fff;
+  border: 1px solid #475569;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  opacity: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+  z-index: 1050;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.toast.is-visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════
+   GUESTBOOK (자유게시판)
+   ═══════════════════════════════════════════ */
+.guestbook-window {
+  margin-top: 20px;
+}
+
+.guestbook-desc {
+  font-size: 13px;
+  color: var(--text-gray);
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.guestbook-form .input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.maple-input {
+  flex: 1;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 10px 12px;
+  color: #e6f0fa;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.maple-input:focus {
+  border-color: var(--text-cyan);
+}
+
+.maple-textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 80px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.guestbook-list-container {
+  margin-top: 15px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
+  padding-top: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.gb-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-left: 3px solid var(--text-gold);
+}
+
+.gb-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.gb-name {
+  color: var(--text-cyan);
+  font-weight: bold;
+}
+
+.gb-date {
+  color: var(--text-gray);
+}
+
+.gb-content {
+  font-size: 13px;
+  color: #e6f0fa;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.gb-loading {
+  text-align: center;
+  color: var(--text-gray);
+  font-size: 13px;
+  padding: 20px 0;
+}

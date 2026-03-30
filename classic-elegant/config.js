@@ -16,7 +16,7 @@ const CONFIG = {
   // ── 초대장 열기 및 배경음악 ──
   useCurtain: false,  // 초대장 열기 화면 사용 여부 (true: 사용, false: 바로 본문 표시)
   useBgm: true,       // 배경음악 사용 여부
-  bgmPath: "music/Marie Digby_I Do.mp3", // 배경음악 파일 경로 (이곳에 mp3 파일 경로를 넣으세요)
+  bgmPath: "music/The Raindrop Flower.mp3", // 배경음악 파일 경로 (이곳에 mp3 파일 경로를 넣으세요)
 
   // ── 메인 (히어로) ──
   groom: {

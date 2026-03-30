@@ -151,11 +151,10 @@
       }
     });
 
-    // 커튼 화면을 안 쓸 경우, 사용자가 첫 클릭이나 터치 시도 때 재생되도록 함
-    if (CONFIG.useCurtain === false) {
-      document.addEventListener('scroll', startBgmIfEnabled, { once: true });
-      document.addEventListener('click', startBgmIfEnabled, { once: true });
-    }
+    // 사용자가 첫 클릭이나 스크롤 시도 때 배경음악이 재생되도록 이벤트를 겁니다.
+    document.addEventListener('scroll', startBgmIfEnabled, { once: true });
+    document.addEventListener('click', startBgmIfEnabled, { once: true });
+    document.addEventListener('touchstart', startBgmIfEnabled, { once: true });
   }
 
   function startBgmIfEnabled() {
@@ -169,37 +168,6 @@
         console.warn('BGM 자동 재생이 브라우저 정책으로 차단되었습니다.', err);
       });
     }
-  }
-
-  /* ═══════════════════════════════════════════
-     Curtain
-     ═══════════════════════════════════════════ */
-
-  function initCurtain() {
-    const curtain = $('#curtain');
-    const btn = $('#curtainBtn');
-    const namesEl = $('#curtainNames');
-
-    // If useCurtain is false, skip the curtain entirely
-    if (CONFIG.useCurtain === false) {
-      curtain.style.display = 'none';
-      initPetals();
-      return;
-    }
-
-    namesEl.textContent = `${CONFIG.groom.name}  &  ${CONFIG.bride.name}`;
-
-    btn.addEventListener('click', () => {
-      curtain.classList.add('is-open');
-      document.body.classList.remove('no-scroll');
-      startBgmIfEnabled(); // 초대장 열기 클릭 시 쾌적한 BGM 시작
-      setTimeout(() => {
-        curtain.classList.add('is-hidden');
-        initPetals();
-      }, 1400);
-    });
-
-    document.body.classList.add('no-scroll');
   }
 
   /* ═══════════════════════════════════════════
@@ -781,7 +749,7 @@
   async function init() {
     setMetaTags();
     initBgm();
-    initCurtain();
+    initPetals(); // 커튼이 없으므로 바로 실행
     initHero();
     initCountdown();
     initGreeting();

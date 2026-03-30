@@ -687,7 +687,7 @@ a {
 
 .story__photo-item img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 3;
   object-fit: cover;
   transition: transform var(--transition-slow);
 }
@@ -1034,8 +1034,13 @@ a {
 }
 
 @keyframes spinMusic {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ═══════════════════════════════════════════

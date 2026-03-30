@@ -13,8 +13,7 @@
  */
 
 const CONFIG = {
-  // ── 초대장 열기 및 배경음악 ──
-  useCurtain: false,  // 초대장 열기 화면 사용 여부 (true: 사용, false: 바로 본문 표시)
+  // ── 배경음악 설정 ──
   useBgm: true,       // 배경음악 사용 여부
   bgmPath: "music/The Raindrop Flower.mp3", // 배경음악 파일 경로 (이곳에 mp3 파일 경로를 넣으세요)
 
@@ -68,14 +67,14 @@ const CONFIG = {
   // ── 마음 전하실 곳 ──
   accounts: {
     groom: [
-      { role: "신랑", name: "홍길동", bank: "국민은행", number: "000-000-000000" },
-      { role: "아버지", name: "홍판서", bank: "신한은행", number: "000-000-000000" },
-      { role: "어머니", name: "김부인", bank: "우리은행", number: "000-000-000000" }
+      { role: "신랑", name: "최진호", bank: "국민은행", number: "000-000-000000" },
+      { role: "아버지", name: "최종원", bank: "신한은행", number: "000-000-000000" },
+      { role: "어머니", name: "장미선", bank: "우리은행", number: "000-000-000000" }
     ],
     bride: [
-      { role: "신부", name: "김영희", bank: "하나은행", number: "000-000-000000" },
-      { role: "아버지", name: "김사장", bank: "기업은행", number: "000-000-000000" },
-      { role: "어머니", name: "이부인", bank: "농협은행", number: "000-000-000000" }
+      { role: "신부", name: "권민정", bank: "하나은행", number: "000-000-000000" },
+      { role: "아버지", name: "권혁두", bank: "기업은행", number: "000-000-000000" },
+      { role: "어머니", name: "문경애", bank: "농협은행", number: "000-000-000000" }
     ]
   },
 

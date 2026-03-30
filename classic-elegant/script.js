@@ -538,17 +538,31 @@
   let touchStartY = 0;
   let touchEndY = 0;
 
+  let savedScrollY = 0; // 스크롤 위치 저장용 변수
+
   function openPhotoModal(images, index) {
     modalImages = images;
     modalIndex = index;
+    
+    // 모달 여는 순간의 현재 스크롤 위치 기억
+    savedScrollY = window.scrollY;
+    
     showModalImage();
     $('#photoModal').classList.add('is-open');
+    
+    // 스크롤이 탑으로 튕기지 않게 현재 위치에 body를 고정
+    document.body.style.top = `-${savedScrollY}px`;
     document.body.classList.add('no-scroll');
   }
 
   function closePhotoModal() {
     $('#photoModal').classList.remove('is-open');
+    
     document.body.classList.remove('no-scroll');
+    // 고정했던 top 속성 지우기
+    document.body.style.removeProperty('top');
+    // 저장해둔 스크롤 위치로 원래대로 돌려놓기 (수직 튐 방지)
+    window.scrollTo(0, savedScrollY);
   }
 
   function showModalImage() {

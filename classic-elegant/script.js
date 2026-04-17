@@ -479,6 +479,9 @@
 
   function initGallery(galleryImages) {
     const grid = $('#galleryGrid');
+    const moreWrapper = $('#galleryMoreWrapper');
+    const moreBtn = $('#galleryMoreBtn');
+
     // Remove loading placeholder if present
     const placeholder = grid.querySelector('.loading-placeholder');
     if (placeholder) placeholder.remove();
@@ -490,22 +493,59 @@
       return;
     }
 
-    galleryImages.forEach((src, i) => {
-      const div = document.createElement('div');
-      div.className = 'gallery__item animate-item';
-      div.setAttribute('data-animate', 'scale-in');
-      
-      // 원본 경로에서 파일명 부분만 추출/교체하여 thumb 경로 생성
-      // "images/gallery/1.jpg" -> "images/gallery/thumb/1.jpg"
-      const thumbSrc = src.replace('images/gallery/', 'images/gallery/thumb/');
-      
-      // 그리드에는 저용량 썸네일을 표시 (대역폭 초절약)
-      div.innerHTML = `<img src="${thumbSrc}" alt="갤러리 사진 ${i + 1}" loading="lazy">`;
-      
-      // 클릭 시 모달에는 원본 고해상도 이미지 배열(galleryImages)을 통째로 전달
-      div.addEventListener('click', () => openPhotoModal(galleryImages, i));
-      grid.appendChild(div);
-    });
+    let currentIndex = 0;
+    const INITIAL_COUNT = 9;
+
+    // 동적 생성 요소들을 위한 별도의 옵저버
+    const galleryObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          galleryObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px 50px 0px' });
+
+    function renderNextBatch() {
+      const start = currentIndex;
+      // 첫 로드(0)일 때는 9개, 그 이후 클릭 호출일 경우 나머지 전부
+      const end = (start === 0) ? Math.min(INITIAL_COUNT, galleryImages.length) : galleryImages.length;
+
+      for (let i = start; i < end; i++) {
+        const src = galleryImages[i];
+        const div = document.createElement('div');
+        div.className = 'gallery__item animate-item';
+        div.setAttribute('data-animate', 'scale-in');
+        
+        // 원본 경로에서 파일명 부분만 추출/교체하여 thumb 경로 생성
+        const thumbSrc = src.replace('images/gallery/', 'images/gallery/thumb/');
+        
+        // 그리드에는 저용량 썸네일을 표시 (대역폭 초절약)
+        div.innerHTML = `<img src="${thumbSrc}" alt="갤러리 사진 ${i + 1}" loading="lazy">`;
+        
+        // 클릭 시 모달에는 원본 이미지 목록 기준 인덱스를 전달
+        div.addEventListener('click', () => openPhotoModal(galleryImages, i));
+        
+        grid.appendChild(div);
+        galleryObserver.observe(div);
+      }
+
+      currentIndex = end;
+
+      if (currentIndex >= galleryImages.length) {
+        if (moreWrapper) moreWrapper.style.display = 'none';
+      } else {
+        if (moreWrapper) moreWrapper.style.display = 'block';
+      }
+    }
+
+    renderNextBatch();
+
+    if (moreBtn) {
+      moreBtn.addEventListener('click', () => {
+        renderNextBatch();
+      });
+    }
   }
 
   /* ═══════════════════════════════════════════

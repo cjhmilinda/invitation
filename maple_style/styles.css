@@ -583,6 +583,7 @@ a {
 
 .maple-input {
   flex: 1;
+  min-width: 0;
   background: rgba(15, 23, 42, 0.7);
   border: 1px solid #334155;
   border-radius: 4px;
@@ -650,4 +651,38 @@ a {
   color: var(--text-gray);
   font-size: 13px;
   padding: 20px 0;
+}
+
+/* Pagination (Maple Theme) */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+  padding-bottom: 10px;
+}
+
+.pagination-btn {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text-gray);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination-btn:hover {
+  border-color: var(--text-cyan);
+  color: var(--text-cyan);
+}
+
+.pagination-btn.active {
+  background: #334155;
+  border-color: var(--text-gold);
+  color: var(--text-gold);
+  font-weight: bold;
 }

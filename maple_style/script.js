@@ -319,92 +319,162 @@
     async function initGuestbook() {
         const listEl = $('#gbList');
         const submitBtn = $('#gbSubmitBtn');
-        const url = CONFIG.guestbookUrl;
+        const config = CONFIG.firebaseConfig;
 
-        // URL 유효성 검사
-        if (!url || url.trim() === '') {
-            if (listEl) listEl.innerHTML = '<div class="gb-loading" style="color:#ef4444;">방명록 기능이 비활성화되었습니다. (설정 파일에 구글 시트 URL 입력 필요)</div>';
+        if (!config || !config.apiKey) {
+            if (listEl) listEl.innerHTML = '<div class="gb-loading" style="color:#ef4444;">방명록 기능이 비활성화되었습니다. (Firebase 설정 필요)</div>';
             if (submitBtn) submitBtn.disabled = true;
             return;
         }
 
-        // 방명록 불러오기
-        async function loadEntries() {
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                if (listEl) listEl.innerHTML = '';
+        try {
+            // Firebase 모듈 동적 로드 (버전 12.12.0)
+            const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js");
+            const { getDatabase, ref, push, onValue } = await import("https://www.gstatic.com/firebasejs/12.12.0/firebase-database.js");
 
-                if (data.length === 0) {
-                    if (listEl) listEl.innerHTML = '<div class="gb-loading">첫 번째 파티 축하글의 주인공이 되어보세요!</div>';
+            const app = initializeApp(config);
+            const db = getDatabase(app);
+            const dbRef = ref(db, 'guestbooks/maple_style');
+
+            if (listEl) listEl.innerHTML = '<div class="gb-loading">실시간 데이터를 연결 중입니다...</div>';
+
+            let allEntries = [];
+            const ITEMS_PER_PAGE = 5;
+            let currentPage = 1;
+            const paginationEl = $('#gbPagination');
+
+            // 실시간 데이터 수신 리스너 추가
+            onValue(dbRef, (snapshot) => {
+                if (listEl) listEl.innerHTML = '';
+                const data = snapshot.val();
+                
+                if (!data) {
+                    allEntries = [];
+                    renderPage(1);
                     return;
                 }
 
-                // 최신 글이 위로 오도록 배열 뒤집기
-                data.reverse().forEach(item => {
+                const entries = [];
+                for (const key in data) {
+                    entries.push({ id: key, ...data[key] });
+                }
+
+                allEntries = entries.reverse(); // 최신순
+                renderPage(1);
+            }, (error) => {
+                console.error("Firebase read err: ", error);
+                if (listEl) listEl.innerHTML = '<div class="gb-loading" style="color:#ef4444;">데이터베이스 접속 오류 (초기 세팅 규칙을 확인해 주세요.)</div>';
+            });
+
+            function renderPage(page) {
+                if (!listEl) return;
+                currentPage = page;
+                
+                if (allEntries.length === 0) {
+                    listEl.innerHTML = '<div class="gb-loading">첫 번째 파티 축하글의 주인공이 되어보세요!</div>';
+                    if (paginationEl) paginationEl.style.display = 'none';
+                    return;
+                }
+
+                const start = (page - 1) * ITEMS_PER_PAGE;
+                const end = start + ITEMS_PER_PAGE;
+                const pageItems = allEntries.slice(start, end);
+
+                listEl.innerHTML = '';
+                pageItems.forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'gb-item';
 
-                    // XSS 방지를 위한 텍스트 이스케이프
-                    const safeName = item.name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                    const safeMsg = (item.message || '').replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>');
+                    const safeName = String(item.name || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    const safeMsg = String(item.message || '').replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>');
 
                     div.innerHTML = `
                         <div class="gb-header">
                             <span class="gb-name">${safeName}</span>
-                            <span class="gb-date">${item.date}</span>
+                            <span class="gb-date">${item.date || ''}</span>
                         </div>
                         <div class="gb-content">${safeMsg}</div>
                     `;
-                    if (listEl) listEl.appendChild(div);
+                    listEl.appendChild(div);
                 });
-            } catch (err) {
-                if (listEl) listEl.innerHTML = '<div class="gb-loading" style="color:#ef4444;">방명록을 불러오는 데 실패했습니다.</div>';
+
+                renderPagination();
             }
-        }
 
-        // 초기 로드
-        loadEntries();
-
-        // 방명록 작성
-        if (submitBtn) {
-            submitBtn.addEventListener('click', async () => {
-                const name = $('#gbName').value.trim();
-                const pw = $('#gbPassword').value.trim();
-                const msg = $('#gbMessage').value.trim();
-
-                if (!name || !msg) {
-                    showToast('닉네임과 내용을 모두 입력해주세요!');
+            function renderPagination() {
+                if (!paginationEl) return;
+                const totalPages = Math.ceil(allEntries.length / ITEMS_PER_PAGE);
+                
+                if (totalPages <= 1) {
+                    paginationEl.style.display = 'none';
                     return;
                 }
+                
+                paginationEl.style.display = 'flex';
+                paginationEl.innerHTML = '';
 
-                submitBtn.disabled = true;
-                submitBtn.textContent = '등록 중...';
-
-                try {
-                    const formData = new FormData();
-                    formData.append('name', name);
-                    formData.append('password', pw);
-                    formData.append('message', msg);
-
-                    // fetch POST (구글 Apps Script 특성상 CORS 에러표시가 나도 실제 데이터는 전송됨)
-                    await fetch(url, { method: 'POST', body: formData, mode: 'no-cors' });
-
-                    showToast('방명록이 등록되었습니다!');
-                    $('#gbName').value = '';
-                    $('#gbPassword').value = '';
-                    $('#gbMessage').value = '';
-
-                    // 다시 불러오기 (시트에 반영되는 시간 고려 1.5초 딜레이)
-                    setTimeout(() => { loadEntries(); }, 1500);
-
-                } catch (err) {
-                    showToast('방명록 등록 오류가 발생했습니다.');
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = '글쓰기 등록';
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'pagination-btn' + (i === currentPage ? ' active' : '');
+                    btn.textContent = i;
+                    btn.onclick = () => renderPage(i);
+                    paginationEl.appendChild(btn);
                 }
-            });
+            }
+
+            // 작성하기 기능 (빠른 응답)
+            if (submitBtn) {
+                submitBtn.addEventListener('click', async () => {
+                    const name = $('#gbName').value.trim();
+                    const pw = $('#gbPassword').value.trim();
+                    const msg = $('#gbMessage').value.trim();
+
+                    if (!name || !msg) {
+                        showToast('닉네임과 내용을 모두 입력해주세요!');
+                        return;
+                    }
+
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = '전송 중...';
+
+                    const now = new Date();
+                    const dateStr = Utilities_formatDate_mock(now);
+
+                    try {
+                        await push(dbRef, {
+                            name: name,
+                            password: pw,
+                            message: msg,
+                            date: dateStr,
+                            timestamp: now.getTime()
+                        });
+                        
+                        showToast('방명록이 등록되었습니다!');
+                        $('#gbName').value = '';
+                        $('#gbPassword').value = '';
+                        $('#gbMessage').value = '';
+
+                    } catch (err) {
+                        console.error("Firebase write err: ", err);
+                        showToast('방명록 등록 오류가 발생했습니다.');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '글쓰기 등록';
+                    }
+                });
+            }
+        } catch (err) {
+            console.error("Firebase SDK init err: ", err);
+            if (listEl) listEl.innerHTML = '<div class="gb-loading" style="color:#ef4444;">시스템 모듈 오류, 접속 환경을 확인하세요.</div>';
+        }
+
+        function Utilities_formatDate_mock(d) {
+            const yr = d.getFullYear();
+            const mo = String(d.getMonth() + 1).padStart(2, '0');
+            const da = String(d.getDate()).padStart(2, '0');
+            const hr = String(d.getHours()).padStart(2, '0');
+            const mi = String(d.getMinutes()).padStart(2, '0');
+            return `${yr}-${mo}-${da} ${hr}:${mi}`;
         }
     }
 

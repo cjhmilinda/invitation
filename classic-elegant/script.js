@@ -609,7 +609,28 @@
     $('#locationHall').textContent = w.hall;
     $('#locationAddress').textContent = w.address;
     $('#locationTel').textContent = w.tel ? `Tel. ${w.tel}` : '';
-    $('#locationMapImg').src = 'images/location/1.jpg';
+    
+    if (w.transit) {
+      const setTransitInfo = (id, text) => {
+        const p = $(`#${id}`);
+        const wrapper = $(`#${id.replace('transit', 'transitItem')}`);
+        if (p && wrapper) {
+          if (text) {
+            p.textContent = text;
+            wrapper.style.display = '';
+          } else {
+            wrapper.style.display = 'none';
+          }
+        }
+      };
+
+      setTransitInfo('transitSubway', w.transit.subway);
+      setTransitInfo('transitShuttle', w.transit.shuttle);
+      setTransitInfo('transitBus', w.transit.bus);
+      setTransitInfo('transitParking', w.transit.parking);
+      setTransitInfo('transitAtm', w.transit.atm);
+    }
+
     $('#kakaoMapBtn').href = w.mapLinks.kakao || '#';
     $('#naverMapBtn').href = w.mapLinks.naver || '#';
 
@@ -743,6 +764,152 @@
   }
 
   /* ═══════════════════════════════════════════
+     Guestbook
+     ═══════════════════════════════════════════ */
+  async function initGuestbook() {
+    const listEl = $('#gbList');
+    const submitBtn = $('#gbSubmitBtn');
+    const paginationEl = $('#gbPagination');
+    const config = CONFIG.firebaseConfig;
+
+    if (!config || !config.apiKey) {
+      if (listEl) listEl.innerHTML = '<div class="gb-loading" style="color:#ef4444;">방명록 설정(Firebase)이 필요합니다.</div>';
+      return;
+    }
+
+    let allEntries = [];
+    const ITEMS_PER_PAGE = 5;
+    let currentPage = 1;
+
+    try {
+      const { initializeApp } = await import("https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js");
+      const { getDatabase, ref, push, onValue } = await import("https://www.gstatic.com/firebasejs/12.12.0/firebase-database.js");
+
+      const app = initializeApp(config);
+      const db = getDatabase(app);
+      const dbRef = ref(db, 'guestbooks/classic_elegant');
+
+      if (listEl) listEl.innerHTML = '<div class="gb-loading">방명록 데이터를 불러오는 중입니다...</div>';
+
+      onValue(dbRef, (snapshot) => {
+        const data = snapshot.val();
+        if (!data) {
+          allEntries = [];
+          renderPage(1);
+          return;
+        }
+
+        const entries = [];
+        for (const key in data) {
+          entries.push({ id: key, ...data[key] });
+        }
+        allEntries = entries.reverse(); // 최신 등록순
+        renderPage(1); // 글 쓰거나 처음 로드될 때 1페이지로
+      });
+
+      function renderPage(page) {
+        if (!listEl) return;
+        currentPage = page;
+        
+        if (allEntries.length === 0) {
+          listEl.innerHTML = '<div class="gb-loading">가장 먼저 축하의 마음을 남겨주세요!</div>';
+          if (paginationEl) paginationEl.style.display = 'none';
+          return;
+        }
+
+        const start = (page - 1) * ITEMS_PER_PAGE;
+        const end = start + ITEMS_PER_PAGE;
+        const pageItems = allEntries.slice(start, end);
+
+        listEl.innerHTML = '';
+        pageItems.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'gb-item';
+          
+          const safeName = String(item.name || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
+          const safeMsg = String(item.message || '').replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>');
+          
+          div.innerHTML = `
+            <div class="gb-header">
+              <span class="gb-name">${safeName}</span>
+              <span class="gb-date">${item.date || ''}</span>
+            </div>
+            <div class="gb-content">${safeMsg}</div>
+          `;
+          listEl.appendChild(div);
+        });
+
+        renderPagination();
+      }
+
+      function renderPagination() {
+        if (!paginationEl) return;
+        const totalPages = Math.ceil(allEntries.length / ITEMS_PER_PAGE);
+        
+        if (totalPages <= 1) {
+          paginationEl.style.display = 'none';
+          return;
+        }
+        
+        paginationEl.style.display = 'flex';
+        paginationEl.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement('button');
+          btn.className = 'pagination-btn' + (i === currentPage ? ' active' : '');
+          btn.textContent = i;
+          btn.onclick = () => renderPage(i);
+          paginationEl.appendChild(btn);
+        }
+      }
+
+      if (submitBtn) {
+        submitBtn.addEventListener('click', async () => {
+          const name = $('#gbName').value.trim();
+          const pw = $('#gbPassword').value.trim();
+          const msg = $('#gbMessage').value.trim();
+
+          if (!name || !msg) {
+            alert('이름과 메시지를 모두 입력해주세요.');
+            return;
+          }
+
+          submitBtn.disabled = true;
+          submitBtn.textContent = '등록 중...';
+
+          const now = new Date();
+          const dateStr = Utilities_formatDate_mock(now);
+
+          try {
+            await push(dbRef, { name, password: pw, message: msg, date: dateStr, timestamp: now.getTime() });
+            $('#gbName').value = '';
+            $('#gbPassword').value = '';
+            $('#gbMessage').value = '';
+          } catch (err) {
+            console.error(err);
+            alert('방명록 등록 중 오류가 발생했습니다.');
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = '등록하기';
+          }
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      if (listEl) listEl.innerHTML = '<div class="gb-loading" style="color:#ef4444;">오류가 발생했습니다. 잠시 후 다시 시도해주세요.</div>';
+    }
+  }
+
+  function Utilities_formatDate_mock(d) {
+    const yr = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const da = String(d.getDate()).padStart(2, '0');
+    const hr = String(d.getHours()).padStart(2, '0');
+    const mi = String(d.getMinutes()).padStart(2, '0');
+    return `${yr}-${mo}-${da} ${hr}:${mi}`;
+  }
+
+  /* ═══════════════════════════════════════════
      Init
      ═══════════════════════════════════════════ */
 
@@ -763,6 +930,7 @@
     initLocation();
     initAccounts();
     initFooter();
+    initGuestbook();
     initScrollAnimations();
 
     // Set story text immediately (photos load async)

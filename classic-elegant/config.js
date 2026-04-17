@@ -15,14 +15,14 @@
 const CONFIG = {
   // ── 방명록 (Firebase) ──
   firebaseConfig: {
-      apiKey: "AIzaSyBVZ290EgV6R_9rXcqwPzEm9u84FeZHqjA",
-      authDomain: "mobile-board-b551f.firebaseapp.com",
-      projectId: "mobile-board-b551f",
-      storageBucket: "mobile-board-b551f.firebasestorage.app",
-      messagingSenderId: "709124590893",
-      appId: "1:709124590893:web:d285b05486d1ee682097a4",
-      databaseURL: "https://mobile-board-b551f-default-rtdb.firebaseio.com",
-      measurementId: "G-2NZRBP0P0C"
+    apiKey: "AIzaSyBVZ290EgV6R_9rXcqwPzEm9u84FeZHqjA",
+    authDomain: "mobile-board-b551f.firebaseapp.com",
+    projectId: "mobile-board-b551f",
+    storageBucket: "mobile-board-b551f.firebasestorage.app",
+    messagingSenderId: "709124590893",
+    appId: "1:709124590893:web:d285b05486d1ee682097a4",
+    databaseURL: "https://mobile-board-b551f-default-rtdb.firebaseio.com",
+    measurementId: "G-2NZRBP0P0C"
   },
 
   // ── 배경음악 설정 ──
@@ -59,7 +59,7 @@ const CONFIG = {
       subway: "지하철 7호선 강남구청역 4번출구 도보 10분\n분당선 압구정로데오역 4번출구 도보 10분",
       shuttle: "지하철 7호선 및 수인분당선 강남구청역 4번출구 앞 (5~10분 간격 출발)",
       bus: "차병원 차움 : 4212\n농협 앞 : 343, 4212\nST송은빌딩 : 9407, 9507, 9607",
-      parking: "(건물 내부 만차시, 외부 주차장 무료 발렛파킹)\n1. 신사역 사거리 > 영동대교 방면 > 청담스퀘어 다음 블럭\n2. 영동대교 남단 청담사거리 > 학동사거리방면 청담스퀘어 앞 U턴 후 다음 블럭",
+      parking: "(만차 시 외부주차장 무료 발렛파킹)\n1. 신사역 사거리 > 영동대교 방면 > 청담스퀘어 다음 블럭\n2. 영동대교 남단 청담사거리 > 학동사거리방면 청담스퀘어 앞 U턴 후 다음 블럭",
       atm: "더청담 1층 로비 위치"
     },
     mapLinks: {

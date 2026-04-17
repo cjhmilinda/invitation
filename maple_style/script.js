@@ -223,7 +223,9 @@
         document.addEventListener('click', (e) => {
             if (e.target.tagName === 'IMG' && e.target.closest('.story-gallery')) {
                 if (modalImg && modal) {
-                    modalImg.src = e.target.src;
+                    // 썸네일 이미지(/thumb/)를 클릭했을 때 원본 이미지로 치환하여 모달에 넘겨줌
+                    const originalSrc = e.target.src.replace('/thumb/', '/');
+                    modalImg.src = originalSrc;
                     $('#modalCounter').textContent = 'Image'; // Optional indexing
                     modal.classList.add('is-open');
                 }

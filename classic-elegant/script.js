@@ -494,7 +494,15 @@
       const div = document.createElement('div');
       div.className = 'gallery__item animate-item';
       div.setAttribute('data-animate', 'scale-in');
-      div.innerHTML = `<img src="${src}" alt="갤러리 사진 ${i + 1}" loading="lazy">`;
+      
+      // 원본 경로에서 파일명 부분만 추출/교체하여 thumb 경로 생성
+      // "images/gallery/1.jpg" -> "images/gallery/thumb/1.jpg"
+      const thumbSrc = src.replace('images/gallery/', 'images/gallery/thumb/');
+      
+      // 그리드에는 저용량 썸네일을 표시 (대역폭 초절약)
+      div.innerHTML = `<img src="${thumbSrc}" alt="갤러리 사진 ${i + 1}" loading="lazy">`;
+      
+      // 클릭 시 모달에는 원본 고해상도 이미지 배열(galleryImages)을 통째로 전달
       div.addEventListener('click', () => openPhotoModal(galleryImages, i));
       grid.appendChild(div);
     });
@@ -561,11 +569,14 @@
     $('#modalNext').addEventListener('click', () => modalNavigate(1));
 
     const modal = $('#photoModal');
+    // 사용자가 요청한 대로, 모달 배경을 눌러도 닫히지 않고 X버튼으로만 닫히도록 유지합니다.
+    /*
     modal.addEventListener('click', (e) => {
       if (e.target === modal || e.target.id === 'modalContainer') {
         closePhotoModal();
       }
     });
+    */
 
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {

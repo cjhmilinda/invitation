@@ -22,7 +22,10 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap"
     rel="stylesheet">
+  <!-- Preload Critical Assets -->
+  <link rel="preload" as="image" href="images/hero/1.jpg" fetchpriority="high">
 
+  <!-- Styles & Scripts -->
   <link rel="stylesheet" href="styles.css">
   <script src="config.js"></script>
 </head>
@@ -65,7 +68,7 @@
     <!-- ─── Hero Section ─── -->
     <section class="section hero" id="hero">
       <div class="hero__overlay"></div>
-      <img class="hero__photo" id="heroPhoto" src="images/hero/1.jpg" alt="웨딩 사진" loading="eager">
+      <img class="hero__photo" id="heroPhoto" src="images/hero/1.jpg" alt="웨딩 사진" fetchpriority="high">
       <div class="hero__content">
         <p class="hero__label animate-item" data-animate="fade-down">Wedding Invitation</p>
         <h1 class="hero__names animate-item" data-animate="fade-up" id="heroNames"></h1>

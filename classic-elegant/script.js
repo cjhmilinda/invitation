@@ -47,20 +47,25 @@
           resolve(images);
           return;
         }
-        const img = new Image();
         const path = `images/${folder}/${current}.jpg`;
-        img.onload = function () {
-          images.push(path);
-          consecutiveFails = 0;
-          current++;
-          tryNext();
-        };
-        img.onerror = function () {
-          consecutiveFails++;
-          current++;
-          tryNext();
-        };
-        img.src = path;
+        
+        // Use HEAD request to check file existence without downloading the whole image
+        fetch(path, { method: 'HEAD' })
+          .then(res => {
+            if (res.ok) {
+              images.push(path);
+              consecutiveFails = 0;
+            } else {
+              consecutiveFails++;
+            }
+            current++;
+            tryNext();
+          })
+          .catch(() => {
+            consecutiveFails++;
+            current++;
+            tryNext();
+          });
       }
 
       tryNext();

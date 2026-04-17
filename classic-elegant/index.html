@@ -146,6 +146,7 @@
     <section class="section location" id="location">
       <div class="section__inner">
         <h2 class="section__title animate-item" data-animate="fade-up">오시는 길</h2>
+
         <div class="location__info animate-item" data-animate="fade-up">
           <p class="location__venue" id="locationVenue"></p>
           <p class="location__hall" id="locationHall"></p>
@@ -159,6 +160,12 @@
           </svg>
           주소 복사
         </button>
+
+        <div class="location__static-map-wrapper animate-item" data-animate="fade-up">
+          <img src="images/location/map.png" alt="오시는 길 약도" class="location__static-map" id="staticMapImg">
+          <p class="location__static-map-hint">↑ 지도를 터치하면 확대됩니다</p>
+        </div>
+
         <div class="location__transit animate-item" data-animate="fade-up">
           <div class="transit-item" id="transitItemSubway">
             <h3 class="transit-item__title">지하철</h3>

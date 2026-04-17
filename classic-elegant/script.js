@@ -660,6 +660,14 @@
     $('#copyAddressBtn').addEventListener('click', () => {
       copyToClipboard(w.address, '주소가 복사되었습니다');
     });
+
+    // 정적 약도 클릭 시 전체화면(모달) 뷰어 연결
+    const staticMapImg = $('#staticMapImg');
+    if (staticMapImg) {
+      staticMapImg.addEventListener('click', () => {
+        openPhotoModal(['images/location/map.png'], 0);
+      });
+    }
   }
 
   /* ═══════════════════════════════════════════

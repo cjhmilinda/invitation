@@ -771,9 +771,34 @@ a {
   margin-bottom: var(--spacing-lg);
 }
 
-.location__map {
-  margin-bottom: var(--spacing-lg);
+.location__static-map-wrapper {
+  margin: var(--spacing-md) 0 var(--spacing-lg);
+  text-align: center;
+}
+
+.location__static-map {
+  width: 100%;
+  max-width: 480px;
   border-radius: var(--radius-md);
+  margin: 0 auto;
+  cursor: pointer;
+  mix-blend-mode: multiply; /* Removes white background if page bg is off-white/ivory */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease;
+}
+
+.location__static-map:active {
+  transform: scale(0.98);
+}
+
+.location__static-map-hint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-xs);
+  letter-spacing: 0.5px;
+}
+
+.location__map {
   overflow: hidden;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
 }

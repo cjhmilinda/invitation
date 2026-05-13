@@ -147,6 +147,15 @@ a {
   transform: translateY(1px);
 }
 
+.bgm-control {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  font-family: 'MaplestoryOTFBold', sans-serif;
+}
+
 /* ═══════════════════════════════════════════
    MAIN BANNER
    ═══════════════════════════════════════════ */
@@ -167,7 +176,10 @@ a {
 .banner-subtitle,
 .banner-venue {
   font-size: 16px;
-  color: #e2e8f0;
+  color: #fff;
+  font-family: 'MaplestoryOTFBold', sans-serif;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 3px 5px rgba(0,0,0,0.8);
+  margin-top: 2px;
 }
 
 /* ═══════════════════════════════════════════

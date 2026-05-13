@@ -198,8 +198,8 @@ a {
   height: 100%;
   object-fit: contain;
   transform-origin: center;
-  transform: scale(2.2) translateY(-10%);
-  /* 사진 속 캐릭터가 너무 작게 그려져 있어 발생하는 상단 여백을 없애기 위해 2.2배로 대폭 확대 후 위로 끌어올림 */
+  transform: scale(1.8) translateY(-5%);
+  /* 캐릭터 크기를 살짝 줄이고 위로 끌어올리는 정도를 완화하여 머리가 잘리지 않도록 조정 */
 }
 
 .level-box {
@@ -247,7 +247,6 @@ a {
 .npc-dialog-modern {
   display: flex;
   min-height: 110px;
-  border-left: 4px solid var(--text-cyan);
 }
 
 .npc-profile-area {

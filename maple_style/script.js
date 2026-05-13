@@ -187,25 +187,42 @@
         });
     }
 
-    function initBGM() {
-        const bgmBtn = $('#bgmControl');
-        if (!bgmBtn) return;
+    let isBgmPlaying = false;
 
-        // In a real scenario, you'd have an Audio object here
-        // const audio = new Audio('bgm.mp3');
-        // audio.loop = true;
-        let isPlaying = false;
+    function initBGM() {
+        const audio = $('#bgmAudio');
+        const bgmBtn = $('#bgmControl');
+        if (!bgmBtn || !audio) return;
+
+        audio.src = 'music/The Raindrop Flower.mp3';
 
         bgmBtn.addEventListener('click', () => {
-            isPlaying = !isPlaying;
-            if (isPlaying) {
-                bgmBtn.textContent = '🔇 BGM OFF';
-                // audio.play();
-            } else {
+            if (isBgmPlaying) {
+                audio.pause();
+                isBgmPlaying = false;
                 bgmBtn.textContent = '🔈 BGM ON';
-                // audio.pause();
+            } else {
+                audio.play().catch(() => showToast('음악을 재생할 수 없습니다.'));
+                isBgmPlaying = true;
+                bgmBtn.textContent = '🔇 BGM OFF';
             }
         });
+
+        // 첫 스크롤/클릭 시 자동 재생 시도
+        const startBgmIfEnabled = () => {
+            if (!isBgmPlaying) {
+                audio.play().then(() => {
+                    isBgmPlaying = true;
+                    bgmBtn.textContent = '🔇 BGM OFF';
+                }).catch(err => {
+                    console.warn('BGM 자동 재생이 브라우저 정책으로 차단되었습니다.', err);
+                });
+            }
+        };
+
+        document.addEventListener('scroll', startBgmIfEnabled, { once: true });
+        document.addEventListener('click', startBgmIfEnabled, { once: true });
+        document.addEventListener('touchstart', startBgmIfEnabled, { once: true });
     }
 
     function initModal() {

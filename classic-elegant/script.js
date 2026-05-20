@@ -683,8 +683,8 @@
         <div class="account-item__info">
           <div class="account-item__role">${acc.role}</div>
           <div class="account-item__detail">
-            <span class="account-item__name">${acc.name || ''}</span>
-            ${acc.bank} ${acc.number}
+            <div class="account-item__name">${acc.name || ''}</div>
+            <div class="account-item__number">${acc.bank} ${acc.number}</div>
           </div>
         </div>
         <button class="account-item__copy" data-account="${acc.bank} ${acc.number} ${acc.name || ''}">

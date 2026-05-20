@@ -950,6 +950,7 @@ a {
   font-weight: 300;
   color: var(--color-text);
   margin-top: 0.125rem;
+  line-height: 1.4;
 }
 
 .account-item__name {
